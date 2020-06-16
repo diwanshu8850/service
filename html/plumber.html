@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html>
+    
+    <head>
+        <title>Home Services</title>
+        
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        
+        <script src="../scripts/handlebars.min.js"></script>
+        <script id="plumber" type="text/x-handlebars-template">
+
+            {{#each carpentorArray}}
+
+                <div class="row my-5">
+                    <div class="col">
+                        <div class="btn btn-primary rounded-0 btn-dark font-weight-bold"  data-toggle="collapse" href="#{{this.name}}" role="button" aria-expanded="false" aria-controls="{{this.name}}">
+                            {{this.name}}
+                        </div>
+                    </div>
+                </div>
+                {{#each this.services}}
+                    <div class="container border py-3 mb-3 collapse" id="{{../this.name}}">
+                        <div class="row">
+                            <div class="col-2">
+                                <img src="{{this.image}}">
+                            </div>
+                
+                            <div class="col-7">
+                                <div class="row">
+                                    <p class="font-weight-bold">{{this.name}}</p>
+                                </div>
+                                <div class="row">
+                                    <span class="font-weight-bold">{{this.price}}</span>
+                                </div>
+                            </div>
+                
+                            <div class="col-3">
+                                <div class="row">
+                                    <button type="button" class="btn rounded-0 btn-light border-right-0">ADD</button>
+                                    <button class="btn btn-light border-left-0 rounded-0" type="button">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-8">
+                                <p class="text-secondary">{{this.text}}</p>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            {{/each}}
+
+        </script>
+        
+        <style>
+            #nav, #footer {
+                background-color: 	#68838b ; 
+                        
+                }
+            body, #card{
+                background-color:		#f5fffa;
+            }
+            
+        </style>
+        
+    </head>
+    
+    <body>
+        
+        <!-- Navigation bar --> <!-- Location fixed--> <!-- Dropdown menu on services -->
+        <nav class="navbar navbar-expand-sm navbar-light sticky-top" id="nav">
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-label="Toggle navigation" aria-expanded="false"><span class="navbar-toggler-icon"></span></button>
+                    
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <nav class="navbar-nav mr-auto">
+                    <a class="nav-link h5 active font-weight-bold px-5" href="./index.html">Home</a>
+                    <div class="dropdown">
+                        <a class="nav-link h5 font-weight-bold px-5 dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="html/services-home.html">
+                            Services
+                        </a> 
+                        
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item h6 py-3" href="html/plumber.html">Plumber</a>
+                            <a class="dropdown-item h6 py-3" href="html/carpentor.html">Carpentor</a>
+                            <a class="dropdown-item h6 py-3" href="html/electrical-services.html">Electrical Services</a>
+                            <a class="dropdown-item h6 py-3" href="html/ac-repairs.html">AC Repair</a>
+                        </div>
+                    </div>
+                    <a class="nav-link h5 font-weight-bold px-5" href="html/login.html" id="logged">Log In</a>
+                    <a class="nav-link h5 font-weight-bold px-5" href="html/sign-up.html" id="logged">Sign Up</a>
+                    <a class="nav-link h5 font-weight-bold px-5" href="#" id="out">My Account</a>
+                    <a class="nav-link h5 font-weight-bold px-5" href="/logout" id="out">Logout Out</a>
+                </nav>
+            </div>
+        </nav> <!-- navigation-bar -->
+        
+        <!--Container -->
+        <div class="container w-50" id="mainContainer">
+        </div>
+        
+        <!--Footer-->
+        <div class="col mt-5 fixed-bottom" id = "footer">
+                <nav class="nav mr-auto justify-content-center">
+                    <a class="nav-link font-weight-normal " href="./index.html">About Us</a>
+                    <a class="nav-link font-weight-normal" href="#">Terms and Conditions</a> 
+                    <a class="nav-link font-weight-normal" href="#">Reviews</a>
+                    <a class="nav-link font-weight-normal" href="#">Contact Us</a>
+                </nav>
+            <hr>
+                
+                <nav class="nav mr-auto justify-content-center">
+                    <a class="nav-link font-weight-normal " href="./index.html">About Us</a>
+                    <a class="nav-link font-weight-normal" href="#">Terms and Conditions</a> 
+                    <a class="nav-link font-weight-normal" href="#">Reviews</a>
+                    <a class="nav-link font-weight-normal" href="#">Contact Us</a>
+                </nav>
+            </div>
+        
+    </body>
+    
+    <script src="../scripts/plumber-01.js" type="text/javascript"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+</html>
