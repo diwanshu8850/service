@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Order = require('./order-data');
 const passportLocalMongoose = require('passport-local-mongoose');
 
 mongoose.connect("mongodb://localhost/user_data",{
@@ -7,13 +6,22 @@ mongoose.connect("mongodb://localhost/user_data",{
     useUnifiedTopology: true
 });
 
+const cartOrder = new mongoose.Schema({
+    name: String,
+    price: String,
+    quantity: Number
+});
+
 const UserSchema = new mongoose.Schema({
+    email: {
+        type: String,
+         required:true,
+        unique: true, // no two users can create two same emails
+    },
     username: String,
+    googleId: String,
     password: String,
-    orders: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Order"
-    }]
+    orders: [cartOrder]
 });
 
 UserSchema.plugin(passportLocalMongoose);

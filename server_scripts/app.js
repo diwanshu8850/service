@@ -4,16 +4,33 @@ const express               = require('express'),
       mongoose              = require('mongoose'),
       Order                 = require('./models/order-data'),
       User                  = require('./models/user_database'),
-      Review                = require('./models/reviews_database'),
+      passport              = require('passport'),
+      passportLocal         = require('passport-local'),
+      Review                = require('./models/reviews'),
+      methodOverride        = require('method-override'),
+      reviewRouter          = require('./routes/reviews'),
+      cookieSession = require('cookie-session'),
+      authRoutes = require('./routes/routes'),
+      passportSetup = require('./config/passport-setup'),
+      keys = require('./config/keys'),
       Carpentor             = require('./models/carpentor-data.js'),
       Ac                    = require('./models/ac-service-data'),
       Plumber               = require('./models/plumber-data'),
-      Electrical            = require('./models/electrical-data.js'),
-      passport              = require('passport'),
-      passportLocal         = require('passport-local');
+      Electrical            = require('./models/electrical-data.js');
 
 app.use(express.static('../'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.set('view engine','ejs');
+app.use(methodOverride('_method'));
+
+// set up session cookies
+app.use(cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [keys.session.cookieKey]
+}));
+
+//set up auth routes
+app.use('/auth',authRoutes);
 
 //Passport config
 app.use(require('express-session')({
@@ -26,9 +43,6 @@ app.use(passport.session());
 passport.use(new passportLocal(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-//console.log(Ac);
-
 
 //Serving current user details
 app.get('/index',(req,res)=>{
@@ -127,50 +141,154 @@ app.post('/add_cart',islogged,(req, res)=>{
                 console.log(err);
             }
             else{
-                let service;
-                item[0].services.forEach(data =>{
-                   if(data._id == req.query.id){
-                       service = data;
-                   } 
+                const service = item[0].services.find((data)=>{
+                   return data._id == req.query.id; 
                 });
-                Order.create({
-                    name: service.name,
-                    price: service.price,
-                    quantity: 1
-                }, (err, data)=>{
+                
+                const user = req.user;
+                const index = user.orders.findIndex(data=>{
+                   return data.name == service.name; 
+                });
+//                console.log(index);
+                if(index!=-1){
+                    user.orders[index].quantity+=1;
+                } else{
+                    user.orders.push({
+                        name: service.name,
+                        price: service.price,
+                        quantity: 1
+                    });
+                }
+                user.save(err=>{
                     if(err){
                         console.log(err);
                     }
-                    else{
-                        if(req.user.orders.length !== 0){
-                            req.user.orders.find({data._id}).populate("orders").exec((err, it)=>{
-                                if(err){
-                                    console.log(err);
-                                }
-                                else{
-                                    console.log(it);
-                                }
-                            });
-                        }
-                        else{
-                            req.user.orders.push(data);
-                            req.user.save((err, it)=>{
-                                if(err){
-                                    console.log(err);
-                                }
-                            });
-                        }
-                    }
+//                    else{
+//                        console.log(user);
+//                    }
                 });
+                res.redirect('./html/electrical-services.html');
             }
         });
     }
-    res.redirect('/html/electrical-services.html');
+    else if('Plumber' === req.query.service){
+        Plumber.find({_id: req.query.serviceId}, (err, item)=>{
+            if(err){
+                console.log(err);
+            }
+            else{
+                const service = item[0].services.find((data)=>{
+                   return data._id == req.query.id; 
+                });
+                
+                const user = req.user;
+                const index = user.orders.findIndex(data=>{
+                   return data._id == service._id; 
+                });
+                if(index!=-1){
+                    user.orders[index].quantity+=1;
+                } else{
+                    user.orders.push({
+                        name: service.name,
+                        price: service.price,
+                        quantity: 1
+                    });
+                }
+                user.save(err=>{
+                    if(err){
+                        console.log(err);
+                    }
+//                    else{
+//                        console.log(user);
+//                    }
+                });
+//                console.log(user);
+                res.redirect('./html/plumber.html');
+            }
+        });
+    }
+    else if('Carpentor' === req.query.service){
+        Carpentor.find({_id: req.query.serviceId}, (err, item)=>{
+            if(err){
+                console.log(err);
+            }
+            else{
+                const service = item[0].services.find((data)=>{
+                   return data._id == req.query.id; 
+                });
+                
+                const user = req.user;
+                const index = user.orders.findIndex(data=>{
+                   return data._id == service._id; 
+                });
+                if(index!=-1){
+                    user.orders[index].quantity+=1;
+                } else{
+                    user.orders.push({
+                        name: service.name,
+                        price: service.price,
+                        quantity: 1
+                    });
+                }
+                user.save(err=>{
+                    if(err){
+                        console.log(err);
+                    }
+//                    else{
+//                        console.log(user);
+//                    }
+                });
+//                console.log(user);
+                res.redirect('./html/carpentor.html');
+            }
+        });
+    }
+    else if('Ac' === req.query.service){
+        Ac.find({_id: req.query.serviceId}, (err, item)=>{
+            if(err){
+                console.log(err);
+            }
+            else{
+                const service = item[0].services.find((data)=>{
+                   return data._id == req.query.id; 
+                });
+                
+                const user = req.user;
+                const index = user.orders.findIndex(data=>{
+                   return data._id == service._id; 
+                });
+                if(index!=-1){
+                    user.orders[index].quantity+=1;
+                } else{
+                    user.orders.push({
+                        name: service.name,
+                        price: service.price,
+                        quantity: 1
+                    });
+                }
+                user.save(err=>{
+                    if(err){
+                        console.log(err);
+                    }
+//                    else{
+//                        console.log(user);
+//                    }
+                });
+//                console.log(user);
+                res.redirect('./html/ac-repairs.html');
+            }
+        });
+    }
 });
 
+//showing mycart
+app.get('/mycart', (req, res)=>{
+//    console.log(req.user.orders);
+    res.send({data: req.user.orders});
+});
 
-
-
+//this is for reviews router and we create it in routes folder
+app.use('/reviews',reviewRouter);
 
 
 

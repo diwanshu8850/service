@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('./user_database');
 
 mongoose.connect('mongodb://localhost/order_db',{
     useNewUrlParser: true, 
@@ -9,7 +8,8 @@ mongoose.connect('mongodb://localhost/order_db',{
 const orderSchema = new mongoose.Schema({
     name: String,
     price: String,
-    quantity: Number
+    quantity: Number,
+    email: String,
 });
 
 module.exports = mongoose.model('Order', orderSchema);
