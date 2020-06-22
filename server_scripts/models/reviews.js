@@ -8,7 +8,7 @@ const createDomPurify = require('dompurify');
 const { JSDOM }= require('jsdom');
 const dompurify= createDomPurify(new JSDOM().window);
 
-mongoose.connect('mongodb://localhost/project',
+mongoose.connect('mongodb://localhost/service',
 	{ useNewUrlParser: true , useUnifiedTopology: true ,useCreateIndex: true});
 
 //this is my schema for our databse
@@ -17,6 +17,7 @@ const reviewSchema= new mongoose.Schema({
 		type    : String,
 		required: true
 	},
+    username: String,
 	description :{
 		type : String
 	},

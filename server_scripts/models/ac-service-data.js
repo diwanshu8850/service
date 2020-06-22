@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/ac_service_data',{
+mongoose.connect('mongodb://localhost/service',{
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 });
@@ -8,7 +8,8 @@ mongoose.connect('mongodb://localhost/ac_service_data',{
 const serviceSchema = new mongoose.Schema({
     name: String,
     price: String,
-    text: String
+    text: String,
+    image: String
 });
 
 const Acs = mongoose.model("Acs", serviceSchema);
@@ -28,16 +29,19 @@ module.exports =  mongoose.model("Ac", acSchema);
 //            name: "AC General Cleaning",
 //            price: "Rs. #",
 //            text: "Includes All",
+//            image: "../img/ac-repair.png"
 //        },
 //        {
 //            name: "AC Deep Cleaning",
 //            price: "Rs. #",
-//            text: "Includes All"
+//            text: "Includes All",
+//            image: "../img/ac-repair.png"
 //        },
 //        {
 //            name: "AC Repair & Service",
 //            price: "Rs. #",
-//            text: "Per Visit"
+//            text: "Per Visit",
+//            image: "../img/ac-repair.png"
 //        }
 //    ]
 //}, (err, item)=>{

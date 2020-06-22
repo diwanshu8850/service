@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/plumber_data',{
+mongoose.connect('mongodb://localhost/service',{
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 });
@@ -8,7 +8,8 @@ mongoose.connect('mongodb://localhost/plumber_data',{
 const plServiceSchema = new mongoose.Schema({
     name: String,
     price: String,
-    text: String
+    text: String,
+    image: String
 });
 
 const Pls = mongoose.model("Pls", plServiceSchema);
@@ -29,17 +30,19 @@ module.exports =  mongoose.model("Plumber", plumberSchema);
 //            name: "Waste Pipe",
 //            price: "Rs. #",
 //            text: "Includes All",
-//            image:"../img/pigeon-install.jpg"
+//            image:"../img/waste-pipe.jpg"
 //        },
 //        {
 //            name: "Washbasin repair",
 //            price: "Rs. #",
-//            text: "Includes All"
+//            text: "Includes All",
+//            image:"../img/wash-basin.jpg"
 //        },
 //        {
 //            name: "Wash Basin & Sink Installation",
 //            price: "Rs. #",
-//            text: "Doesn't includes Roof Drilling"
+//            text: "Doesn't includes Roof Drilling",
+//            image:"../img/wash-basin-and-sink-repair.jpg"
 //        }
 //    ]
 //}, (err, item)=>{

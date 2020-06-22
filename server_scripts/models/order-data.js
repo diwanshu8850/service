@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/order_db',{
+mongoose.connect('mongodb://localhost/service',{
     useNewUrlParser: true, 
     useUnifiedTopology: true 
 });
@@ -12,4 +12,4 @@ const orderSchema = new mongoose.Schema({
     email: String,
 });
 
-module.exports = mongoose.model('Order', orderSchema);
+//module.exports = mongoose.model('Order', orderSchema);

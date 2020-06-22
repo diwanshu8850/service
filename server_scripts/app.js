@@ -9,14 +9,21 @@ const express               = require('express'),
       Review                = require('./models/reviews'),
       methodOverride        = require('method-override'),
       reviewRouter          = require('./routes/reviews'),
-      cookieSession = require('cookie-session'),
-      authRoutes = require('./routes/routes'),
-      passportSetup = require('./config/passport-setup'),
-      keys = require('./config/keys'),
-      Carpentor             = require('./models/carpentor-data.js'),
+      cookieSession         = require('cookie-session'),
+      authRoutes            = require('./routes/routes'),
+      passportSetup         = require('./config/passport-setup'),
+      keys                  = require('./config/keys'),
       Ac                    = require('./models/ac-service-data'),
       Plumber               = require('./models/plumber-data'),
-      Electrical            = require('./models/electrical-data.js');
+      Electrical            = require('./models/electrical-data.js'),
+      Carpentor             = require('./models/carpentor-data.js');
+//      nodemailer            = require('nodemailer'),
+//      validateMail          = require('./routes/mailcheck');
+
+mongoose.connect("mongodb://localhost/service",{
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 app.use(express.static('../'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -47,7 +54,16 @@ passport.deserializeUser(User.deserializeUser());
 //Serving current user details
 app.get('/index',(req,res)=>{
 //    console.log(req.user);
-   res.send({user: req.user}); 
+//    if(!req.user){
+//        res.send({user: undefined});
+//    } 
+//    else{
+//        if(req.user.confirmed){
+            res.send({user: req.user});
+//        } else{
+//            res.send({user: undefined});
+//        }
+//    }
 });
 
 //serving services data
@@ -112,16 +128,42 @@ app.post('/register',(req,res)=>{
         }
         if(req.body.password === req.body.passwordRepeat){
             passport.authenticate("local")(req, res, ()=>{
-                res.redirect('/'); 
+//                validateMail(req.body.username).catch(console.error);
+                res.redirect('/');
             });
         } else{
+//            req.flash("error", "Password did not match or User already exist.")
             return res.redirect('/html/sign-up.html');
         }
     });
 });
+        
+//validating mail
+//app.get('/check/:id',(req,res)=>{
+//    User.find({username: req.params.id}, (err, user)=>{
+//        user.confirmed = true;
+//        req.user = user;
+//        res.redirect('/');
+//    });
+//});
+
+//check link clicked or not
+//const checkUser = (req, res, next)=>{
+//    User.find({username: req.body.name},(err, user)=>{
+//        if(err){
+//            console.log(err);
+//            return res.redirect('/html/login.html');
+//        }
+//        if(user.confirmed){
+//            next();
+//        } else{
+//            return res.redirect('/html/login.html');
+//        }
+//    });
+//};
 
 //Login Post
-app.post('/login',passport.authenticate("local", {
+app.post('/login', passport.authenticate("local", {
     successRedirect: 'index.html',
     failureRedirect: '/html/login.html'
 }));
@@ -156,6 +198,7 @@ app.post('/add_cart',islogged,(req, res)=>{
                     user.orders.push({
                         name: service.name,
                         price: service.price,
+                        image: service.image,
                         quantity: 1
                     });
                 }
@@ -191,6 +234,7 @@ app.post('/add_cart',islogged,(req, res)=>{
                     user.orders.push({
                         name: service.name,
                         price: service.price,
+                        image: service.image,
                         quantity: 1
                     });
                 }
@@ -227,6 +271,7 @@ app.post('/add_cart',islogged,(req, res)=>{
                     user.orders.push({
                         name: service.name,
                         price: service.price,
+                        image: service.image,
                         quantity: 1
                     });
                 }
@@ -263,6 +308,7 @@ app.post('/add_cart',islogged,(req, res)=>{
                     user.orders.push({
                         name: service.name,
                         price: service.price,
+                        image: service.image,
                         quantity: 1
                     });
                 }
@@ -285,6 +331,40 @@ app.post('/add_cart',islogged,(req, res)=>{
 app.get('/mycart', (req, res)=>{
 //    console.log(req.user.orders);
     res.send({data: req.user.orders});
+});
+
+// Decreasing Cart item quantity
+app.post('/decreaseCartItem/:name',(req, res)=>{
+    let index;
+    for(let i=0;i<req.user.orders.length;i++){
+        if(req.user.orders[i].name === req.params.name){
+            index=i;
+            break;
+        }
+    }
+//    console.log(index);
+    if(req.user.orders[index].quantity === 1){
+        req.user.orders.splice(index, 1);
+    } else{
+        req.user.orders[index].quantity = req.user.orders[index].quantity - 1;
+    }
+    req.user.save();
+    res.redirect('../html/myCart.html');
+});
+
+// Increasing Cart item quantity
+app.post('/increaseCartItem/:name',(req, res)=>{
+    let index;
+    for(let i=0;i<req.user.orders.length;i++){
+        if(req.user.orders[i].name === req.params.name){
+            index=i;
+            break;
+        }
+    }
+//    console.log(index);    
+    req.user.orders[index].quantity = req.user.orders[index].quantity + 1;
+    req.user.save();
+    res.redirect('../html/myCart.html');
 });
 
 //this is for reviews router and we create it in routes folder
